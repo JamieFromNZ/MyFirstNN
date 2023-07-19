@@ -1,12 +1,12 @@
 class Perceptron {
     constructor() {
-        this.weights = Math.random();
+        this.weight = Math.random();
         this.bias = Math.random();
         this.learningRate = 0.1; 
     }
 
     predict(input) {
-        let weightedSum = this.weights * input + this.bias;
+        let weightedSum = this.weight * input + this.bias;
         return this.activationFunction(weightedSum); 
     }
 
@@ -19,7 +19,7 @@ class Perceptron {
         let error = target - prediction;
 
         // Update weights and bias (back propagation)
-        this.weights += this.learningRate * error * input;
+        this.weight += this.learningRate * error * input;
         this.bias += this.learningRate * error;
     }
 }
