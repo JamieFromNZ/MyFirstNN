@@ -1,0 +1,1 @@
+hi, this is my embarassnig attempt at making a Neural Network, I'm only using one neuron for each layer for now and it's just trying to figure out if an input is 1 or 0, later I might try to get it to figure out numbers from 1-9.
