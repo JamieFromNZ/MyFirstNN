@@ -1,16 +1,14 @@
-const NeuralNetwork = require('./classes/NeuralNetwork');
+const Perceptron = require('./classes/Perceptron');
 const readline = require('readline');
 
-let learningRate = 0.1;
+// Create a new perceptron
+let perceptron = new Perceptron();
 
-// Create a new network with 1 input, 1 hidden neuron, and 1 output
-let nn = new NeuralNetwork(1, 1, 1);
-
-// Train the network with the training data, 10000 epochs
+// Train the perceptron with the training data
 for (let i = 0; i < 10000; i++) {
     let input = Math.floor(Math.random() * 2);
-    let target = input === 1 ? 1 : 0;
-    nn.train({input: input, target: target}, learningRate);
+    let target = input;
+    perceptron.train(input, target);
 }
 
 // Create readline interface
@@ -19,19 +17,14 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-// Ask user for input
+// Test the nn
 rl.question('Please enter a number (0 or 1): ', (answer) => {
     // Make sure the answer is a number
     let input = Number(answer);
-    let result = nn.feed(input);
 
-    console.log(result);
+    let prediction = perceptron.predict(input);
 
-    if (result.finalOutput > 0.5) {
-        console.log("The network predicts that the input is 1");
-    } else {
-        console.log("The network predicts that the input is not 1");
-    }
+    console.log(`The input ${input} is ${prediction}`);
 
     // Close the readline interface
     rl.close();
