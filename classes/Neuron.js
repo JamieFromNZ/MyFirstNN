@@ -15,10 +15,9 @@ class Neuron {
         return this.activate(this.weight * input + this.bias);
     }
 
-    // The derivative of the activation function (sigmoid functi]
+    // The derivative of the activation function (sigmoid function)
     sigmoidDerivative(x) {
-        const fx = this.activate(x);
-        return fx * (1 - fx);
+        return x * (1 - x);
     }
 }
 

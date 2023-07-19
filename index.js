@@ -1,15 +1,16 @@
 const NeuralNetwork = require('./classes/NeuralNetwork');
 const readline = require('readline');
 
-let learningRate = 0.5;
+let learningRate = 0.1;
 
 // Create a new network with 1 input, 1 hidden neuron, and 1 output
 let nn = new NeuralNetwork(1, 1, 1);
 
-// Train the network with the training data, a learning rate of 0.1, and 1000 epochs
+// Train the network with the training data, 10000 epochs
 for (let i = 0; i < 10000; i++) {
     let input = Math.floor(Math.random() * 2);
-    nn.train({input: input, target: input}, learningRate);
+    let target = input === 1 ? 1 : 0;
+    nn.train({input: input, target: target}, learningRate);
 }
 
 // Create readline interface
