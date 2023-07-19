@@ -1,12 +1,6 @@
 const NeuralNetwork = require('./classes/NeuralNetwork');
 const readline = require('readline');
 
-// Create some training data, it figures out if the number is 1
-let data = [
-    {input: 1, target: true},
-    {input: 0, target: false},
-];
-
 let learningRate = 0.5;
 
 // Create a new network with 1 input, 1 hidden neuron, and 1 output
@@ -14,7 +8,8 @@ let nn = new NeuralNetwork(1, 1, 1);
 
 // Train the network with the training data, a learning rate of 0.1, and 1000 epochs
 for (let i = 0; i < 10000; i++) {
-    nn.train(data, learningRate);
+    let input = Math.floor(Math.random() * 2);
+    nn.train({input: input, target: input}, learningRate);
 }
 
 // Create readline interface

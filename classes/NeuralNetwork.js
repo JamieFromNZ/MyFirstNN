@@ -14,34 +14,32 @@ class NeuralNetwork {
         return { finalOutput: output, hiddenOutput: hiddenOutput };
     }
 
-    train(data, learningRate) {
-        for (let piece of data) {
-            console.log("Input:" + piece.input);
-            let outputs = this.feed(piece.input);
+    train(piece, learningRate) {
+        console.log("Input:" + piece.input);
+        let outputs = this.feed(piece.input);
 
-            console.log("Hidden output " + outputs.hiddenOutput);
-            console.log("Final output " + outputs.finalOutput);
+        console.log("Hidden output " + outputs.hiddenOutput);
+        console.log("Final output " + outputs.finalOutput);
 
-            {
-                // Calculate errors
-                let outputError = Number(piece.target) - outputs.finalOutput[0];
-                let hiddenError = this.outputLayer[0].weight * outputError;
+        {
+            // Calculate errors
+            let outputError = Number(piece.target) - outputs.finalOutput[0];
+            let hiddenError = this.outputLayer[0].weight * outputError;
 
-                // Adjust weights and biases
-                for (let i = 0; i < this.outputLayer.length; i++) {
-                    let neuron = this.outputLayer[i];
-                    neuron.weight += learningRate * outputError * neuron.sigmoidDerivative(outputs.finalOutput[0]);
-                    //neuron.bias += learningRate * outputError;
-                }
-                for (let i = 0; i < this.hiddenLayer.length; i++) {
-                    let neuron = this.hiddenLayer[i];
-                    neuron.weight += learningRate * hiddenError * neuron.sigmoidDerivative(outputs.hiddenOutput[0]);
-                    //neuron.bias += learningRate * hiddenError;
-                }                
+            // Adjust weights and biases
+            for (let i = 0; i < this.outputLayer.length; i++) {
+                let neuron = this.outputLayer[i];
+                neuron.weight += learningRate * outputError * neuron.sigmoidDerivative(outputs.finalOutput[0]);
+                //neuron.bias += learningRate * outputError;
             }
-
-            console.log("----");
+            for (let i = 0; i < this.hiddenLayer.length; i++) {
+                let neuron = this.hiddenLayer[i];
+                neuron.weight += learningRate * hiddenError * neuron.sigmoidDerivative(outputs.hiddenOutput[0]);
+                //neuron.bias += learningRate * hiddenError;
+            }
         }
+
+        console.log("----");
     }
 }
 
