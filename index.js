@@ -11,21 +11,28 @@ for (let i = 0; i < 10000; i++) {
     perceptron.train(input, target);
 }
 
+console.log(perceptron);
+
 // Create readline interface
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-// Test the nn
-rl.question('Please enter a number (0 or 1): ', (answer) => {
-    // Make sure the answer is a number
-    let input = Number(answer);
+// Ask the user to input a test value
+askQuestion();
 
-    let prediction = perceptron.predict(input);
+function askQuestion() {
+    // Test the nn
+    rl.question('Please enter a number (0 or 1): ', (answer) => {
+        // Make sure the answer is a number
+        let input = Number(answer);
 
-    console.log(`The input ${input} is ${prediction}`);
+        let prediction = perceptron.predict(input);
 
-    // Close the readline interface
-    rl.close();
-});
+        console.log(`The input ${input} is ${prediction}`);
+
+        // Ask it again
+        askQuestion();
+    });
+}
