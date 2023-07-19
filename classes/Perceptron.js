@@ -7,7 +7,6 @@ class Perceptron {
 
     predict(input) {
         let weightedSum = this.weights * input + this.bias;
-        console.log(weightedSum);
         return this.activationFunction(weightedSum); 
     }
 
