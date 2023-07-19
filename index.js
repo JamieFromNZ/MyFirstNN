@@ -11,8 +11,6 @@ for (let i = 0; i < 10000; i++) {
     perceptron.train(input, target);
 }
 
-console.log(perceptron);
-
 // Create readline interface
 const rl = readline.createInterface({
     input: process.stdin,
@@ -30,7 +28,8 @@ function askQuestion() {
 
         let prediction = perceptron.predict(input);
 
-        console.log(`The input ${input} is ${prediction}`);
+        console.log(`The input ${input} is \x1b[36m${prediction}\x1b[0m \x1b[0m`);
+        console.log("--------");
 
         // Ask it again
         askQuestion();
