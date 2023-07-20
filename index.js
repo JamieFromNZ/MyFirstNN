@@ -60,6 +60,7 @@ function generateText(model, seedWord, length = 10) {
     const generatedText = [seedWord];
     let currentWord = model.wordToNumber[seedWord];
 
+    // Add words to array, 2% chargeee aargh
     for (let i = 0; i < length; i++) {
         const predictedNextWord = model.predict(currentWord);
         const predictedWord = Object.keys(model.wordToNumber).find((word) => model.wordToNumber[word] === Math.round(predictedNextWord));
