@@ -11,15 +11,6 @@ class NeuralNetwork {
         this.numberToWordConverter = {};
     }
 
-    setWordsObject(object) {
-        this.wordToNumberConverter = object;
-        this.numberToWordConverter = {};
-        for (const word in object) {
-            const number = object[word];
-            this.numberToWordConverter[number] = word;
-        }
-    }
-
     train(trainingData) {
         for (let i = 0; i < /*trainingData.length - 15*/2; i++) {
             const next15Words = trainingData.slice(i, i + 15);
@@ -30,7 +21,7 @@ class NeuralNetwork {
 
             let prediction = this.predict(next15Words);
             console.log(this.numberToWord(prediction));
-            //this.backwardPropagation(nextWord, prediction, next15Words);
+            this.backwardPropagation(nextWord, prediction, next15Words);
         }
     }
 
@@ -44,11 +35,11 @@ class NeuralNetwork {
         return predictionIndex;
     }
 
-    backwardPropagation(targetWordIndex, predictionWordIndex, inputs) {
+    backwardPropagation(targetWordIndex, predictionWordIndex, next15Words) {
         const outputErrors = this.calculateOutputErrors();
         const hiddenErrors = this.calculateHiddenErrors();
 
-        const hiddenOutputs = this.hiddenLayer.map(hiddenNeuron => hiddenNeuron.calculateNextWord(prev15Words));
+        const hiddenOutputs = this.hiddenLayer.map(hiddenNeuron => hiddenNeuron.calculateNextWord(next15Words));
         const outputOutputs = this.outputLayer.map(outputNeuron => outputNeuron.calculateNextWord(hiddenOutputs));
 
         this.updateOutputLayerWeights();
@@ -70,14 +61,9 @@ class NeuralNetwork {
     updateHiddenLayerWeights(hiddenErrors, inputs) {
 
     }
+    
 
-    activationFunctionDerivative(x) {
-        return x * (1 - x);
-    }
-
-
-
-    getWordToNumberConverter(trainingData) {
+    setWordToNumberConverter(trainingData) {
         const wordToNumber = {};
         let index = 0;
         for (let word of trainingData) {
@@ -86,8 +72,16 @@ class NeuralNetwork {
                 index++;
             }
         }
-        return wordToNumber;
+        this.wordToNumberConverter = wordToNumber;
     }
+
+    setNumberToWordConverter() {
+        this.numberToWordConverter = {};
+        for (let word in this.wordToNumberConverter) {
+            let number = this.wordToNumberConverter[word];
+            this.numberToWordConverter[number] = word;
+        }
+    }    
 
     wordToNumber(word) {
         return this.wordToNumberConverter[word];

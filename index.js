@@ -18,8 +18,10 @@ wtf.fetch('World_War_II').then((doc) => {
     let uniqueWords = new Set(textArray);
     model = new NeuralNetwork(15, uniqueWords.size);
 
-    model.setWordsObject(model.getWordToNumberConverter(textArray));
-    let trainingData = model.textArrayToNumberArray(textArray, model.wordToNumberConverter)
+    model.setWordToNumberConverter(textArray);
+    model.setNumberToWordConverter();
+
+    let trainingData = model.textArrayToNumberArray(textArray, model.wordToNumberConverter);
     model.train(trainingData);
 
     function generateText(seedWords, length = 10) {
