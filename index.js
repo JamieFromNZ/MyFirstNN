@@ -1,15 +1,9 @@
 const wtf = require('wtf_wikipedia');
 const readline = require('readline');
-const SimpleWordPredictor = require('./classes/SimpleWordPredictor');
 
-// Global variable
+const NeuralNetwork = require('./classes/NeuralNetwork');
+
 let model = undefined;
-
-// Helper function to preprocess text for training
-function preprocessText(text) {
-    // Split the text into individual words
-    return text.split(/\s+/);
-}
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -17,54 +11,32 @@ const rl = readline.createInterface({
 });
 
 wtf.fetch('World_War_II').then((doc) => {
+    // We are transforming the text from the article into a form that our Neural Network can read
     const text = doc.text();
-    // Preprocess the text to get the training data
-    const trainingData = preprocessText(text);
+    const textArray = text.split(/\s+/);
 
-    const wordToNumber = {};
-    let index = 0;
-    for (let word of trainingData) {
-        if (!wordToNumber[word]) {
-            wordToNumber[word] = index;
-            index++;
-        }
-    }
+    let uniqueWords = new Set(textArray);
+    model = new NeuralNetwork(15, uniqueWords.size);
 
-    model = new SimpleWordPredictor(index, wordToNumber, [50, 30]);
+    model.setWordToNumberConverter(model.getWordToNumberConverter(textArray));
+    let trainingData = model.textArrayToNumberArray(textArray, model.wordToNumberConverter)
+    model.train(trainingData);
 
-    // Train the model
-    for (let i = 0; i < 10000; i++) {
-        for (let i = 0; i < trainingData.length - 1; i++) {
-            let currentWord = wordToNumber[trainingData[i]];
-            let nextWord = wordToNumber[trainingData[i + 1]];
-            model.train(currentWord, nextWord);
-        }
-    }
+    function generateText(seedWords, length = 10) {
+        const generatedText = seedWords.split(/\s+/);
+        const generatedTextNumbers = model.textArrayToNumberArray(generatedText, model.wordToNumberConverter);
 
-    // Function to generate text from multiple seed words
-    function generateText(model, seedWords, length = 10) {
-        const generatedText = seedWords.slice(); // Copy seed words to the generated text array
-        let currentWordIndex = seedWords.map(word => wordToNumber[word]);
-
-        // Add words to the array
         for (let i = 0; i < length; i++) {
-            const predictedNextWords = currentWordIndex.map(index => model.predict(index));
-            const predictedWordIndices = predictedNextWords.map(nextWord =>
-                Object.values(model.wordToNumber).findIndex(value => value === Math.round(nextWord))
-            );
-            const predictedWords = predictedWordIndices.map(index => Object.keys(model.wordToNumber)[index]);
-
-            generatedText.push(...predictedWords);
-            currentWordIndex = predictedWordIndices;
+            const predictedNextWordIndex = model.predict(generatedTextNumbers);
+            generatedTextNumbers.push(predictedNextWordIndex);
         }
 
-        return generatedText.join(' ');
+        return model.numbersArrayToTextArray(generatedTextNumbers).join(' ');
     }
 
     function askQuestion() {
         rl.question('Enter the seed words (space-separated) for text generation: ', (seedWordsInput) => {
-            const seedWords = seedWordsInput.split(/\s+/);
-            const generatedText = generateText(model, seedWords, 20);
+            const generatedText = generateText(seedWordsInput, 20);
             console.log(`Generated text: ${generatedText}`);
 
             askQuestion();
