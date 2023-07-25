@@ -5,18 +5,28 @@ class NeuralNetwork {
         this.hiddenLayer = Array.from({ length: hiddenLayerSize }, () => new Neuron(15));
         this.outputLayer = Array.from({ length: outputLayerSize }, () => new Neuron(15));
 
-        this.wordToNumberConverter = undefined;
         this.learningRate = 0.01;
+
+        this.wordToNumberConverter = {};
+        this.numberToWordConverter = {};
     }
 
-    setWordToNumberConverter(object) {
+    setWordsObject(object) {
         this.wordToNumberConverter = object;
+        this.numberToWordConverter = {};
+        for (const word in object) {
+            const number = object[word];
+            this.numberToWordConverter[number] = word;
+        }
     }
 
     train(trainingData) {
-        for (let i = 0; i < trainingData.length - 15; i++) {
+        for (let i = 0; i < /*trainingData.length - 15*/2; i++) {
             const next15Words = trainingData.slice(i, i + 15);
             const nextWord = trainingData[i + 15];
+
+            console.log(this.numbersArrayToTextArray(next15Words));
+            console.log(this.numberToWord(nextWord));
 
             let prediction = this.predict(next15Words);
             console.log(this.numberToWord(prediction));
@@ -76,7 +86,6 @@ class NeuralNetwork {
                 index++;
             }
         }
-
         return wordToNumber;
     }
 
@@ -85,7 +94,7 @@ class NeuralNetwork {
     }
 
     numberToWord(number) {
-        return this.wordToNumberConverter[number];
+        return this.numberToWordConverter[number];
     }
 
     textArrayToNumberArray(text) {
@@ -93,7 +102,7 @@ class NeuralNetwork {
     }
 
     numbersArrayToTextArray(numbers) {
-        return numbers.map(number => this.wordToNumberConverter[number]);
+        return numbers.map(number => this.numberToWordConverter[number]);
     }
 }
 
