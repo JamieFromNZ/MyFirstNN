@@ -10,7 +10,7 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-wtf.fetch('World_War_II').then((doc) => {
+wtf.fetch('Profanity').then((doc) => {
     // We are transforming the text from the article into a form that our Neural Network can read
     const text = doc.text();
     const textArray = text.split(/\s+/);
