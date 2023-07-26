@@ -49,8 +49,7 @@ class NeuralNetwork {
     calculateOutputErrors(targetWordIndex, outputOutputs) {
         const outputErrors = this.outputLayer.map((neuron, index) => {
             let target = (index === targetWordIndex) ? 1 : 0;
-            let output = outputOutputs[index];
-            let error = output - target;
+            let error = outputOutputs[index] - target;
             return error;
         });
         return outputErrors;
